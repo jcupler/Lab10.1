@@ -10,7 +10,8 @@ var { uri } = require('./databaseConnection');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 //connection string, fill it in with YOUR information for your MongoDB deployment
-//const uri = "mongodb+srv://admin:123";
+//const uri = "mongodb+srv://admin:123@shoppingsite.f27zisl";
+
 
 // SETP 1: Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -77,10 +78,12 @@ async function saveCustomerToMongoDB(name, email) {
         await customersCollection.insertOne({"name": name, "email": email });
         console.log("  # documnents now = " + await customersCollection.countDocuments());
 
-    } catch(err) {
-        console.log("Error saving customers from MongoDB " + err);
+
+    } finally {
+    // STEP F: Ensures that the client will close when you finish/error
+    await client.close();
     }
-};
+}
 
 async function getFirst10Customers() {
     try{
