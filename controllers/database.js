@@ -10,8 +10,7 @@ var { uri } = require('./databaseConnection');
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 //connection string, fill it in with YOUR information for your MongoDB deployment
-//const uri = "mongodb+srv://grewe:jority";
-
+//const uri = "mongodb+srv://admin:123";
 
 // SETP 1: Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -78,9 +77,32 @@ async function saveCustomerToMongoDB(name, email) {
         await customersCollection.insertOne({"name": name, "email": email });
         console.log("  # documnents now = " + await customersCollection.countDocuments());
 
-
-    } finally {
-    // STEP F: Ensures that the client will close when you finish/error
-    await client.close();
+    } catch(err) {
+        console.log("Error saving customers from MongoDB " + err);
     }
-}
+};
+
+async function getFirst10Customers() {
+    try{
+        await client.connect();
+        await client.db("admin").command({ ping: 1 });
+        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+
+        var db0 = client.db("shoppingsite"); //client.db("shoppingsite");
+        console.log("got shopping site");
+        console.log("db0" + db0.toString());
+
+        var customersCollection =  db0.collection('customers');
+        console.log("collection is "+ customersCollection.collectionName);
+        console.log(" # documents in it " + await customersCollection.countDocuments());
+
+        var first10Customers = await customersCollection.find().limit(10).toArray();
+        console.log("First 10 customers: " + JSON.stringify(first10Customers));
+        return first10Customers;
+    }
+    catch(err) {
+        console.log("Error getting customers from MongoDB " + err);
+    }
+};
+
+module.exports.getFirst10Customers = getFirst10Customers;

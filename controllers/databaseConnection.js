@@ -1,0 +1,1 @@
+module.exports = { uri: 'mongodb://admin:123@ac-a8qe81d-shard-00-00.f27zisl.mongodb.net:27017,ac-a8qe81d-shard-00-01.f27zisl.mongodb.net:27017,ac-a8qe81d-shard-00-02.f27zisl.mongodb.net:27017/?ssl=true&replicaSet=atlas-hwg929-shard-0&authSource=admin&appName=shoppingsite'};
